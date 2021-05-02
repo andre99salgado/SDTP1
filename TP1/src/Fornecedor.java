@@ -7,9 +7,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class RegistadoraCliente extends java.rmi.server.UnicastRemoteObject implements RegistadoraC {
+public class Fornecedor extends java.rmi.server.UnicastRemoteObject implements RegistadoraC{
 
-    public RegistadoraCliente() throws RemoteException {
+    public Fornecedor() throws RemoteException {
         super();
     }
 
@@ -18,25 +18,22 @@ public class RegistadoraCliente extends java.rmi.server.UnicastRemoteObject impl
         System.out.println("Message from server: " + s);
     }
 
-    public void mainCliente() {
+    public void mainFornecedor(){
         System.setSecurityManager(new SecurityManager());
         try {
-            InputStreamReader r = new InputStreamReader(System.in);
-            BufferedReader br = new BufferedReader(r);
+            InputStreamReader r=new InputStreamReader(System.in);
+            BufferedReader br=new BufferedReader(r);
             RegistadoraCliente ci = new RegistadoraCliente();
             Registadora c = (Registadora) Naming.lookup("rmi://DESKTOP-D7S2GUK/RegistadoraService");
-            c.subscribe("Nome da máquina do cliente ...", (RegistadoraC) ci);
+            c.subscribe("Nome da máquina do cliente ...",(RegistadoraC)ci);
 
-            while (true) {
+            while(true){
                 System.out.println("--------------------------MENU----------------------\n\n");
                 System.out.println("Carregue numa das teclas seguintes para processar uma operação!\n");
                 System.out.println("– Registar um produto - 1");
                 System.out.println("- Adicionar uma certa quantidade de um produto já existente - 2");
-                System.out.println("- Dar saída de um produto - 3");
-                System.out.println("- Eliminar um produto - 4");
-                System.out.println("- Consultar produtos existentes - 5");
-                System.out.println("- Consultar as vendas - 6");
-                System.out.println("– Consultar as compras feitas a um fornecedor - 7");
+                System.out.println("- Eliminar um produto - 3");
+                System.out.println("– Consultar as compras feitas a um fornecedor - 4");
                 System.out.println("\n\n ----------------------------------------------------------\n");
                 System.out.println("WARNINGS:\n");
                 c.vStock();
@@ -47,8 +44,14 @@ public class RegistadoraCliente extends java.rmi.server.UnicastRemoteObject impl
                 int stk = 0;
                 int stkMin = 0;
 
-                switch (br.readLine()) {
+                System.out.print("Insira a o número da operação que pretende realizar: ");
+
+                switch(br.readLine()) {
                     case "1":
+                        System.out.println("CATEGORIAS EXISTENTES");
+                        System.out.println("-mesa");
+                        System.out.println("-cama");
+                        System.out.println("-sofa");
                         System.out.println("\n\n\n-------------------------------------------\n");
                         System.out.println("Inserir categoria: ");
                         cat = br.readLine();
@@ -68,6 +71,10 @@ public class RegistadoraCliente extends java.rmi.server.UnicastRemoteObject impl
                         System.out.println("\n-------------------------------------------\n\n\n");
                         break;
                     case "2":
+                        System.out.println("PRODUTOS EXISTENTES");
+                        System.out.println("-mesa");
+                        System.out.println("-cama");
+                        System.out.println("-sofa");
                         System.out.println("\n\n\n-------------------------------------------\n");
                         System.out.println("Inserir categoria: ");
                         cat = br.readLine();
@@ -81,19 +88,10 @@ public class RegistadoraCliente extends java.rmi.server.UnicastRemoteObject impl
                         System.out.println("\n-------------------------------------------\n\n\n");
                         break;
                     case "3":
-                        System.out.println("\n\n\n-------------------------------------------\n");
-                        System.out.println("Inserir categoria: ");
-                        cat = br.readLine();
-                        System.out.println("Inserir ID: ");
-                        id = Integer.parseInt(br.readLine());
-                        System.out.println("Inserir Stock: ");
-                        stk = Integer.parseInt(br.readLine());
-                        System.out.println("\nA processar operação! \n \n");
-                        c.darSaidaAoProduto(cat, id, stk);
-                        System.out.println("\nA operação processada! \n \n");
-                        System.out.println("\n-------------------------------------------\n\n\n");
-                        break;
-                    case "4":
+                        System.out.println("PRODUTOS EXISTENTES");
+                        System.out.println("-mesa");
+                        System.out.println("-cama");
+                        System.out.println("-sofa");
                         System.out.println("\n\n\n-------------------------------------------\n");
                         System.out.println("Inserir categoria: ");
                         cat = br.readLine();
@@ -104,32 +102,12 @@ public class RegistadoraCliente extends java.rmi.server.UnicastRemoteObject impl
                         System.out.println("\nA operação processada! \n \n");
                         System.out.println("\n-------------------------------------------\n\n\n");
                         break;
-                    case "5":
-                        System.out.println("\n\n\n-------------------------------------------\n");
-                        System.out.println("Inserir categoria: ");
-                        cat = br.readLine();
-                        System.out.println("\nA consultar\n");
-                        ArrayList<String> arr = c.consultarProdutosExistentes(cat);
-                        for (int x = 0; x < arr.size(); x++) {
-                            System.out.println(arr.get(x));
-                        }
+                    case "4":
 
-                        System.out.println("\n-------------------------------------------\n\n\n");
-                        break;
-                    case "6":
-                        System.out.println("\n\n\n-------------------------------------------\n");
-                        System.out.println("A consultar");
-                        ArrayList<String> arr2 = c.consultarVendas();
-                        for (int x = 0; x < arr2.size(); x++) {
-                            System.out.println(arr2.get(x));
-                        }
-                        System.out.println("\n-------------------------------------------\n\n\n");
-                        break;
-                    case "7":
                         System.out.println("\n\n\n-------------------------------------------\n");
                         System.out.println("A consultar");
                         ArrayList<String> arr3 = c.consultarCompras();
-                        for (int x = 0; x < arr3.size(); x++) {
+                        for(int x = 0; x < arr3.size(); x++){
                             System.out.println(arr3.get(x));
                         }
                         System.out.println("\n-------------------------------------------\n\n\n");
@@ -140,7 +118,8 @@ public class RegistadoraCliente extends java.rmi.server.UnicastRemoteObject impl
 
 
             }
-        } catch (RemoteException re) {
+        }
+        catch (RemoteException re) {
             System.out.println("RemoteException");
             System.out.println(re.getMessage());
         } catch (NotBoundException e) {
@@ -152,19 +131,15 @@ public class RegistadoraCliente extends java.rmi.server.UnicastRemoteObject impl
         }
     }
 
+
     public static void main(String args[]) {
+        Fornecedor fornecedor = null;
         try {
-            Vendedor vendedor = new Vendedor();
+            fornecedor = new Fornecedor();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        try {
-            Fornecedor fornecedor = new Fornecedor();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-
+        fornecedor.mainFornecedor();
 
     }
 }

@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 public class Compra implements Serializable {
@@ -6,6 +7,7 @@ public class Compra implements Serializable {
     private int ID;
     private long precoCompra, precoVenda;
     private int quantidade;
+    private Date data;
 
     public Compra(String categoria, int ID, long precoCompra, long precoVenda, int quantidade) {
         this.categoria = categoria;
@@ -13,6 +15,7 @@ public class Compra implements Serializable {
         this.precoCompra = precoCompra;
         this.precoVenda = precoVenda;
         this.quantidade = quantidade;
+        data = new Date();
     }
 
     public Compra(String categoria, int ID, int quantidade) {

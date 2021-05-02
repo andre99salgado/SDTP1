@@ -1,9 +1,12 @@
+import java.io.*;
 import java.rmi.*;
 import java.util.ArrayList;
 
+import static java.lang.System.exit;
+
 public class RegistadoraServer {
 
-
+    private Registadora c;
 
     public RegistadoraServer() {
 // i)
@@ -17,7 +20,8 @@ public class RegistadoraServer {
         }
         try {
 // ii)
-            Registadora c = new RegistadoraImpl();
+            c = new RegistadoraImpl();
+
 // iii)
             Naming.rebind("rmi://localhost:1099/RegistadoraService", c);
         } catch (Exception e) {
@@ -26,10 +30,33 @@ public class RegistadoraServer {
 
     }
 
+    public Registadora getImpl() {
+        return c;
+    }
+
+    public static void main(String args[]) throws IOException {
 
 
-    public static void main(String args[]) {
-        new RegistadoraServer();
+        RegistadoraServer server = new RegistadoraServer();
+
+        InputStreamReader r=new InputStreamReader(System.in);
+        BufferedReader br=new BufferedReader(r);
+
+        if (br.readLine().strip().equals("0")){
+            System.out.println("Closing Server.");
+            try {
+                server.getImpl().guardar();
+                Naming.unbind("rmi://localhost:1099/RegistadoraService");
+                exit(1);
+            } catch (NotBoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+
+
     }
 
 

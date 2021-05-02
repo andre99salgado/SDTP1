@@ -1,3 +1,4 @@
+import java.io.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -9,26 +10,75 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
     public static Vector<Produto> mesas = new Vector<Produto>();
     public static Vector<Compra> compras = new Vector<Compra>();
     public static Vector<Compra> vendas = new Vector<Compra>();
+    //private static Vector<Object> objectsList = new Vector<Object>();
 
     private static RegistadoraC client;
     private static ArrayList<RegistadoraC> clientes;
+    FileInputStream f;
+    ObjectInputStream memory;
 
     public RegistadoraImpl() throws java.rmi.RemoteException {
         super();
         clientes = new ArrayList<RegistadoraC> ();
+
+
+        try {
+            f = new FileInputStream(new File("memory.txt"));
+            memory = new ObjectInputStream(f);
+            camas = (Vector<Produto>) memory.readObject();
+            sofas = (Vector<Produto>) memory.readObject();
+            mesas = (Vector<Produto>) memory.readObject();
+            compras = (Vector<Compra>) memory.readObject();
+            vendas = (Vector<Compra>) memory.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+    //Método Remoto
+    public void guardar() throws java.rmi.RemoteException{
+        FileOutputStream file = null;
+        try {
+            file = new FileOutputStream(new File("memory.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ObjectOutputStream ow = null;
+        try {
+            ow = new ObjectOutputStream(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ow.writeObject(camas);
+            ow.flush();
+            ow.writeObject(sofas);
+            ow.flush();
+            ow.writeObject(mesas);
+            ow.flush();
+            ow.writeObject(compras);
+            ow.flush();
+            ow.writeObject(vendas);
+            ow.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     //-------------------------------------------------------------------------------
     //REGISTAR CLIENTES
 
     //Método remoto
-    public void subscribe(String name, RegistadoraC c) throws java.rmi.RemoteException{
+    public synchronized void subscribe(String name, RegistadoraC c) throws java.rmi.RemoteException{
         System.out.println("Subscribing " +name);
         clientes.add(c);
     }
 
     //Método Remoto
-    public void vStock() throws java.rmi.RemoteException{
+    public synchronized void vStock() throws java.rmi.RemoteException{
         verificarStock(camas);
         verificarStock(sofas);
         verificarStock(mesas);
@@ -37,7 +87,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
     //-------------------------------------------------------------------------------
 
     @Override
-    public void registarProduto(String categoria, int ID, long precoCompra, long precoVenda, int stock , int stockMinimo) throws RemoteException {
+    public synchronized void registarProduto(String categoria, int ID, long precoCompra, long precoVenda, int stock , int stockMinimo) throws RemoteException {
 
         Produto produto = new Produto(categoria,ID,precoCompra,precoVenda,stock, stockMinimo);
         Compra compra = new Compra(categoria,ID,precoCompra,precoVenda,stock);
@@ -57,7 +107,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
     //------------------------------INTERFACE-------------------------
 
     @Override
-    public void adicionarQuantidadeDeProduto(String categoria, int ID, int stock) throws RemoteException {
+    public synchronized  void adicionarQuantidadeDeProduto(String categoria, int ID, int stock) throws RemoteException {
         Produto produto = new Produto(categoria,ID,stock);
         Compra compra = new Compra(categoria,ID,stock);
 
@@ -73,7 +123,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
     }
 
     @Override
-    public void darSaidaAoProduto(String categoria, int ID, int stock) throws RemoteException {
+    public synchronized  void darSaidaAoProduto(String categoria, int ID, int stock) throws RemoteException {
         Produto produto = new Produto(categoria,ID,stock);
         Compra compra = new Compra(categoria,ID,stock);
 
@@ -89,7 +139,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
     }
 
     @Override
-    public void eliminarProduto(String categoria, int ID) throws RemoteException {
+    public synchronized  void eliminarProduto(String categoria, int ID) throws RemoteException {
         Produto produto = new Produto(categoria,ID,0);
 
         if(categoria.equals("mesa")){
@@ -104,7 +154,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
     }
 
     @Override
-    public ArrayList<String> consultarProdutosExistentes(String categoria) throws RemoteException {
+    public synchronized ArrayList<String> consultarProdutosExistentes(String categoria) throws RemoteException {
         if(categoria.equals("mesa")){
             return percorrerListaProdutos(mesas);
         }else if(categoria.equals("sofa")){
@@ -120,12 +170,12 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
     }
 
     @Override
-    public ArrayList<String> consultarVendas() throws RemoteException {
+    public  synchronized ArrayList<String> consultarVendas() throws RemoteException {
         return percorrerListaTransacoes( vendas);
     }
 
     @Override
-    public ArrayList<String> consultarCompras() throws RemoteException {
+    public  synchronized ArrayList<String> consultarCompras() throws RemoteException {
         return percorrerListaTransacoes( compras);
     }
 
@@ -167,14 +217,14 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
 
     private void addTransacao(Compra transacao, Vector<Compra> tipo) {
 
-        for(int x = 0; x < tipo.size(); x++){
+        /*for(int x = 0; x < tipo.size(); x++){
             if(transacao.hashCode() == (tipo.get(x)).hashCode())
                 if(transacao.equals(tipo.get(x))){
                     tipo.get(x).setQuantidade((tipo.get(x).getQuantidade()) + transacao.getQuantidade());
                     System.out.println("Artigo já transacionado: Item adicionado à lista!");
                     return;
                 }
-        }
+        } */
 
         tipo.add(transacao);
     }
