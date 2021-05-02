@@ -8,8 +8,8 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
     public static Vector<Produto> camas = new Vector<Produto>();
     public static Vector<Produto> sofas = new Vector<Produto>();
     public static Vector<Produto> mesas = new Vector<Produto>();
-    public static Vector<Compra> compras = new Vector<Compra>();
-    public static Vector<Compra> vendas = new Vector<Compra>();
+    public static Vector<Transacao> compras = new Vector<Transacao>();
+    public static Vector<Transacao> vendas = new Vector<Transacao>();
     //private static Vector<Object> objectsList = new Vector<Object>();
 
     private static RegistadoraC client;
@@ -28,9 +28,12 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
             camas = (Vector<Produto>) memory.readObject();
             sofas = (Vector<Produto>) memory.readObject();
             mesas = (Vector<Produto>) memory.readObject();
-            compras = (Vector<Compra>) memory.readObject();
-            vendas = (Vector<Compra>) memory.readObject();
-        } catch (Exception e) {
+            compras = (Vector<Transacao>) memory.readObject();
+            vendas = (Vector<Transacao>) memory.readObject();
+        }catch (EOFException e){
+            System.out.println("\n\nA base de dados ainda está vazia \n\n");
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -90,7 +93,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
     public synchronized void registarProduto(String categoria, int ID, long precoCompra, long precoVenda, int stock , int stockMinimo) throws RemoteException {
 
         Produto produto = new Produto(categoria,ID,precoCompra,precoVenda,stock, stockMinimo);
-        Compra compra = new Compra(categoria,ID,precoCompra,precoVenda,stock);
+        Transacao compra = new Transacao(categoria,ID,precoCompra,precoVenda,stock);
 
         if(categoria.equals("mesa")){
             addProduto(produto,compra,mesas);
@@ -109,7 +112,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
     @Override
     public synchronized  void adicionarQuantidadeDeProduto(String categoria, int ID, int stock) throws RemoteException {
         Produto produto = new Produto(categoria,ID,stock);
-        Compra compra = new Compra(categoria,ID,stock);
+        Transacao compra = new Transacao(categoria,ID,stock);
 
         if(categoria.equals("mesa")){
             addProduto(produto,compra,mesas);
@@ -125,7 +128,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
     @Override
     public synchronized  void darSaidaAoProduto(String categoria, int ID, int stock) throws RemoteException {
         Produto produto = new Produto(categoria,ID,stock);
-        Compra compra = new Compra(categoria,ID,stock);
+        Transacao compra = new Transacao(categoria,ID,stock);
 
         if(categoria.equals("mesa")){
             sellProduto(produto,compra,mesas);
@@ -182,7 +185,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
     //FIM---------------------------INTERFACE-------------------------FIM
 
 
-    private void addProduto(Produto produto,Compra compra, Vector<Produto> vetor){
+    private void addProduto(Produto produto, Transacao compra, Vector<Produto> vetor){
 
         for(int x = 0; x < vetor.size(); x++){
                 if(produto.hashCode() == (vetor.get(x)).hashCode())
@@ -200,7 +203,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
 
     }
 
-    private void sellProduto(Produto produto,Compra compra, Vector<Produto> vetor){
+    private void sellProduto(Produto produto, Transacao compra, Vector<Produto> vetor){
 
         for(int x = 0; x < vetor.size(); x++){
             if(produto.hashCode() == (vetor.get(x)).hashCode())
@@ -215,7 +218,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
 
     }
 
-    private void addTransacao(Compra transacao, Vector<Compra> tipo) {
+    private void addTransacao(Transacao transacao, Vector<Transacao> tipo) {
 
         /*for(int x = 0; x < tipo.size(); x++){
             if(transacao.hashCode() == (tipo.get(x)).hashCode())
@@ -251,7 +254,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
         return produtos1;
     }
 
-    private ArrayList<String> percorrerListaTransacoes( Vector<Compra> vetor){
+    private ArrayList<String> percorrerListaTransacoes( Vector<Transacao> vetor){
         ArrayList<String> produtos1 = new ArrayList<String>();
         for(int x = 0; x < vetor.size(); x++){
             produtos1.add(vetor.get(x).toString());

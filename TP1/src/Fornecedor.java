@@ -57,7 +57,7 @@ public class Fornecedor extends java.rmi.server.UnicastRemoteObject implements R
                         cat = br.readLine();
                         System.out.println("Inserir ID: ");
                         id = Integer.parseInt(br.readLine());
-                        System.out.println("Inserir Preço de Compra: ");
+                        System.out.println("Inserir Preço de Transacao: ");
                         pc = Long.parseLong(br.readLine());
                         System.out.println("Inserir Preço de Venda: ");
                         pv = Long.parseLong(br.readLine());

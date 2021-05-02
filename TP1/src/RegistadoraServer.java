@@ -42,17 +42,19 @@ public class RegistadoraServer {
         InputStreamReader r=new InputStreamReader(System.in);
         BufferedReader br=new BufferedReader(r);
 
-        if (br.readLine().strip().equals("0")){
-            System.out.println("Closing Server.");
-            try {
-                server.getImpl().guardar();
-                Naming.unbind("rmi://localhost:1099/RegistadoraService");
-                exit(1);
-            } catch (NotBoundException e) {
-                e.printStackTrace();
+        while(true) {
+            System.out.println("Insira o valor 0 para desligar o servidor e guardar");
+            if (br.readLine().strip().equals("0")) {
+                System.out.println("Closing Server.");
+                try {
+                    server.getImpl().guardar();
+                    Naming.unbind("rmi://localhost:1099/RegistadoraService");
+                    exit(1);
+                } catch (NotBoundException e) {
+                    e.printStackTrace();
+                }
             }
         }
-
 
 
 

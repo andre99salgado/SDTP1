@@ -2,14 +2,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class Compra implements Serializable {
+public class Transacao implements Serializable {
     private String categoria;
     private int ID;
     private long precoCompra, precoVenda;
     private int quantidade;
     private Date data;
 
-    public Compra(String categoria, int ID, long precoCompra, long precoVenda, int quantidade) {
+    public Transacao(String categoria, int ID, long precoCompra, long precoVenda, int quantidade) {
         this.categoria = categoria;
         this.ID = ID;
         this.precoCompra = precoCompra;
@@ -18,10 +18,11 @@ public class Compra implements Serializable {
         data = new Date();
     }
 
-    public Compra(String categoria, int ID, int quantidade) {
+    public Transacao(String categoria, int ID, int quantidade) {
         this.categoria = categoria;
         this.ID = ID;
         this.quantidade = quantidade;
+        data = new Date();
     }
 
     public String getCategoria() {
@@ -68,8 +69,8 @@ public class Compra implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Compra)) return false;
-        Compra compra = (Compra) o;
+        if (!(o instanceof Transacao)) return false;
+        Transacao compra = (Transacao) o;
         return getID() == compra.getID() && Objects.equals(getCategoria(), compra.getCategoria());
     }
 
@@ -80,12 +81,13 @@ public class Compra implements Serializable {
 
     @Override
     public String toString() {
-        return "Compra{" +
+        return "Transacao{" +
                 "categoria='" + categoria + '\'' +
                 ", ID=" + ID +
                 ", precoCompra=" + precoCompra +
                 ", precoVenda=" + precoVenda +
                 ", quantidade=" + quantidade +
+                ", data=" + data +
                 '}';
     }
 }
