@@ -76,7 +76,12 @@ public class Produto implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Produto)) return false;
         Produto produto = (Produto) o;
-        return getID() == produto.getID() && Objects.equals(getCategoria(), produto.getCategoria());
+        return getID() == produto.getID() && getPrecoCompra() == produto.getPrecoCompra() && getPrecoVenda() == produto.getPrecoVenda() && getStock() == produto.getStock() && getStockMinimo() == produto.getStockMinimo() && Objects.equals(getCategoria(), produto.getCategoria());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCategoria(), getID(), getPrecoCompra(), getPrecoVenda(), getStock(), getStockMinimo());
     }
 
     @Override
@@ -89,11 +94,6 @@ public class Produto implements Serializable {
                 ", stock=" + stock +
                 ", stockMinimo=" + stockMinimo +
                 '}';
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getCategoria(), getID());
     }
 
 }

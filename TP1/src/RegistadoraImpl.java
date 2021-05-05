@@ -182,6 +182,107 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
         return percorrerListaTransacoes( compras);
     }
 
+    @Override
+    public synchronized String maisVendido() throws RemoteException {
+        int count = 0 , tempCount , posicao = 0;
+        Transacao  venda = new Transacao("ct",0,0);
+        //percorrer lista das vendas registadas
+        for (int i = 0; i < vendas.size(); i++)
+        {
+            venda = vendas.get(i);
+            tempCount = 0;
+            for(int j = 0 ; j < vendas.size();j++){
+                //verificar se o produto da venda i == ao produto da venda j
+                System.out.println(venda.getQuantidade());
+                if(venda.getQuantidade()==vendas.get(j).getQuantidade())
+                {
+                    tempCount++; // conta
+                }
+            }
+
+            if (tempCount > count){
+                posicao = i;
+                count = tempCount;
+            }
+
+        }
+        return vendas.get(posicao).toString();
+    }
+
+    @Override
+    public synchronized String menosVendido() throws RemoteException {
+        int count = 0 , tempCount , posicao = 0;
+        Transacao  venda = new Transacao("ct",0,0);
+        for (int i = 0; i < vendas.size(); i++)
+        {
+            venda = vendas.get(i);
+            tempCount = 0;
+            for(int j = 0 ; j < vendas.size();j++){
+                if(venda.getQuantidade()==vendas.get(j).getQuantidade())
+                {
+                    tempCount++;
+                }
+            }
+
+            if (tempCount < count){
+                posicao = i;
+                count = tempCount;
+            }
+
+        }
+        return vendas.get(posicao).toString();
+    }
+
+    @Override
+    public synchronized String maisComprado() throws RemoteException {
+        int count = 0 , tempCount , posicao = 0;
+        Transacao  venda = new Transacao("ct",0,0);
+        //percorrer lista das vendas registadas
+        for (int i = 0; i < compras.size(); i++)
+        {
+            venda = compras.get(i);
+            tempCount = 0;
+            for(int j = 0 ; j < compras.size();j++){
+                //verificar se o produto da venda i == ao produto da venda j
+                if(venda.getQuantidade()==compras.get(j).getQuantidade())
+                {
+                    tempCount++; // conta
+                }
+            }
+
+            if (tempCount > count){
+                posicao = i;
+                count = tempCount;
+            }
+
+        }
+        return compras.get(posicao).toString();
+    }
+
+    @Override
+    public synchronized String menosComprado() throws RemoteException {
+        int count = 0 , tempCount , posicao = 0;
+        Transacao  venda = new Transacao("ct",0,0);
+        for (int i = 0; i < compras.size(); i++)
+        {
+            venda = compras.get(i);
+            tempCount = 0;
+            for(int j = 0 ; j < compras.size();j++){
+                if(venda.getQuantidade()==compras.get(j).getQuantidade())
+                {
+                    tempCount++;
+                }
+            }
+
+            if (tempCount < count){
+                posicao = i;
+                count = tempCount;
+            }
+
+        }
+        return compras.get(posicao).toString();
+    }
+
     //FIM---------------------------INTERFACE-------------------------FIM
 
 
@@ -207,7 +308,7 @@ public class RegistadoraImpl extends java.rmi.server.UnicastRemoteObject impleme
 
         for(int x = 0; x < vetor.size(); x++){
             if(produto.hashCode() == (vetor.get(x)).hashCode())
-                if(produto.equals(vetor.get(x))) {
+                if(produto.equals(vetor.get(x)) && vetor.get(x).getStock() > 0) {
                     vetor.get(x).setStock((vetor.get(x).getStock()) - produto.getStock());
                     System.out.println("Produto existe: Stock subtraído!");
                     addTransacao(compra, vendas);

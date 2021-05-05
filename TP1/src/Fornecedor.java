@@ -34,6 +34,8 @@ public class Fornecedor extends java.rmi.server.UnicastRemoteObject implements R
                 System.out.println("- Adicionar uma certa quantidade de um produto já existente - 2");
                 System.out.println("- Eliminar um produto - 3");
                 System.out.println("– Consultar as compras feitas a um fornecedor - 4");
+                System.out.println("- Consultar o mais comprado - 5");
+                System.out.println("- Consultar o menos comprado - 6");
                 System.out.println("\n\n ----------------------------------------------------------\n");
                 System.out.println("WARNINGS:\n");
                 c.vStock();
@@ -110,6 +112,18 @@ public class Fornecedor extends java.rmi.server.UnicastRemoteObject implements R
                         for(int x = 0; x < arr3.size(); x++){
                             System.out.println(arr3.get(x));
                         }
+                        System.out.println("\n-------------------------------------------\n\n\n");
+                        break;
+                    case "5":
+                        System.out.println("\n\n\n-------------------------------------------\n");
+                        System.out.println("A consultar");
+                        System.out.println(c.maisComprado());
+                        System.out.println("\n-------------------------------------------\n\n\n");
+                        break;
+                    case "6":
+                        System.out.println("\n\n\n-------------------------------------------\n");
+                        System.out.println("A consultar");
+                        System.out.println(c.menosComprado());
                         System.out.println("\n-------------------------------------------\n\n\n");
                         break;
                     default:

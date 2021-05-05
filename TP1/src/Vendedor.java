@@ -33,6 +33,8 @@ public class Vendedor extends java.rmi.server.UnicastRemoteObject implements Reg
                 System.out.println("- Dar saída de um produto - 1");
                 System.out.println("- Consultar produtos existentes - 2");
                 System.out.println("- Consultar as vendas - 3");
+                System.out.println("- Consultar o mais vendido - 4");
+                System.out.println("- Consultar o menos vendido - 5");
                 System.out.println("\n\n ----------------------------------------------------------\n");
                 System.out.println("WARNINGS:\n");
                 c.vStock();
@@ -85,6 +87,18 @@ public class Vendedor extends java.rmi.server.UnicastRemoteObject implements Reg
                         for(int x = 0; x < arr2.size(); x++){
                             System.out.println(arr2.get(x));
                         }
+                        System.out.println("\n-------------------------------------------\n\n\n");
+                        break;
+                    case "4":
+                        System.out.println("\n\n\n-------------------------------------------\n");
+                        System.out.println("A consultar");
+                            System.out.println(c.maisVendido());
+                        System.out.println("\n-------------------------------------------\n\n\n");
+                        break;
+                    case "5":
+                        System.out.println("\n\n\n-------------------------------------------\n");
+                        System.out.println("A consultar");
+                        System.out.println(c.menosVendido());
                         System.out.println("\n-------------------------------------------\n\n\n");
                         break;
                     default:
